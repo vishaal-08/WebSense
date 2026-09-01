@@ -184,3 +184,207 @@ def test_vector_engine_deviation_logic():
     assert len(baseline_std) > 10
     assert "Privacy Policy" in explanation
     assert hasattr(vector_engine, "is_chromadb_active")
+
+
+@pytest.mark.anyio
+async def test_llm_analyzer_missing_key_graceful(monkeypatch):
+    """Verify that missing API keys return None without error."""
+    from app.analyzers.llm_analyzer import LLMRiskAnalyzer
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    analyzer = LLMRiskAnalyzer()
+    assert analyzer.is_available() is False
+    result = await analyzer.analyze_clauses(["Some clause text"])
+    assert result is None
+
+
+@pytest.mark.anyio
+async def test_llm_analyzer_openai_mocked_success(monkeypatch):
+    """Verify that OpenAI chat completions request is correctly constructed and parsed."""
+    import httpx
+    import json
+    from app.analyzers.llm_analyzer import LLMRiskAnalyzer
+
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-mock-test-key-for-unit-testing-only")
+
+    mock_llm_output = [
+        {
+            "text": "We sell your personal data to advertisers.",
+            "category": "DATA_SALE",
+            "severity": "CRITICAL",
+            "confidence": 0.95,
+            "explanation": "This allows selling user data.",
+            "why_it_matters": "Your privacy is exposed.",
+            "evidence": "sell your personal data"
+        }
+    ]
+
+    mock_response_data = {
+        "id": "chatcmpl-mock123",
+        "object": "chat.completion",
+        "choices": [
+            {
+                "index": 0,
+                "message": {
+                    "role": "assistant",
+                    "content": json.dumps(mock_llm_output)
+                },
+                "finish_reason": "stop"
+            }
+        ]
+    }
+
+    recorded_requests = []
+
+    async def mock_post(self, url, *args, **kwargs):
+        recorded_requests.append({"url": str(url), "headers": kwargs.get("headers"), "json": kwargs.get("json")})
+        return httpx.Response(
+            status_code=200,
+            json=mock_response_data,
+            request=httpx.Request("POST", url)
+        )
+
+    monkeypatch.setattr(httpx.AsyncClient, "post", mock_post)
+
+    analyzer = LLMRiskAnalyzer()
+    assert analyzer.is_available() is True
+
+    clauses = ["We sell your personal data to advertisers."]
+    results = await analyzer.analyze_clauses(clauses, "Privacy Policy")
+
+    # Verify request construction
+    assert len(recorded_requests) == 1
+    req = recorded_requests[0]
+    assert "api.openai.com/v1/chat/completions" in req["url"]
+    assert req["headers"]["Authorization"] == "Bearer sk-mock-test-key-for-unit-testing-only"
+    assert req["json"]["model"] == "gpt-4o-mini"
+    assert req["json"]["temperature"] == 0.1
+
+    # Verify response parsing
+    assert results is not None
+    assert len(results) == 1
+    assert results[0].category == RiskCategory.DATA_SALE
+    assert results[0].severity == SeverityLevel.CRITICAL
+    assert results[0].confidence == 0.95
+
+
+@pytest.mark.anyio
+async def test_llm_analyzer_openai_markdown_code_fences(monkeypatch):
+    """Verify that OpenAI outputs wrapped in ```json ... ``` code fences are parsed properly."""
+    import httpx
+    import json
+    from app.analyzers.llm_analyzer import LLMRiskAnalyzer
+
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-mock-test-key-for-unit-testing-only")
+
+    raw_json = json.dumps([
+        {
+            "text": "Arbitration is mandatory.",
+            "category": "MANDATORY_ARBITRATION",
+            "severity": "HIGH",
+            "confidence": 0.9,
+            "explanation": "Mandatory arbitration.",
+            "why_it_matters": "Waives court trial."
+        }
+    ])
+    fenced_content = f"```json\n{raw_json}\n```"
+
+    async def mock_post(self, url, *args, **kwargs):
+        return httpx.Response(
+            status_code=200,
+            json={"choices": [{"message": {"content": fenced_content}}]},
+            request=httpx.Request("POST", url)
+        )
+
+    monkeypatch.setattr(httpx.AsyncClient, "post", mock_post)
+
+    analyzer = LLMRiskAnalyzer()
+    results = await analyzer.analyze_clauses(["Arbitration is mandatory."])
+    assert results is not None
+    assert len(results) == 1
+    assert results[0].category == RiskCategory.MANDATORY_ARBITRATION
+
+
+@pytest.mark.anyio
+async def test_llm_analyzer_gemini_mocked_success(monkeypatch):
+    """Verify that Gemini request and response format continues to function properly."""
+    import httpx
+    import json
+    from app.analyzers.llm_analyzer import LLMRiskAnalyzer
+
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setenv("GEMINI_API_KEY", "mock-gemini-key-for-testing")
+
+    mock_gemini_response = {
+        "candidates": [
+            {
+                "content": {
+                    "parts": [
+                        {
+                            "text": json.dumps([
+                                {
+                                    "text": "You assign all inventions to company.",
+                                    "category": "IP_ASSIGNMENT",
+                                    "severity": "CRITICAL",
+                                    "confidence": 0.98,
+                                    "explanation": "Assigns all IP.",
+                                    "why_it_matters": "Loss of inventions."
+                                }
+                            ])
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+
+    recorded_urls = []
+
+    async def mock_post(self, url, *args, **kwargs):
+        recorded_urls.append(str(url))
+        return httpx.Response(
+            status_code=200,
+            json=mock_gemini_response,
+            request=httpx.Request("POST", url)
+        )
+
+    monkeypatch.setattr(httpx.AsyncClient, "post", mock_post)
+
+    analyzer = LLMRiskAnalyzer()
+    assert analyzer.is_available() is True
+    results = await analyzer.analyze_clauses(["You assign all inventions to company."])
+
+    assert len(recorded_urls) == 1
+    assert "generativelanguage.googleapis.com" in recorded_urls[0]
+    assert results is not None
+    assert len(results) == 1
+    assert results[0].category == RiskCategory.IP_ASSIGNMENT
+
+
+@pytest.mark.anyio
+async def test_llm_analyzer_timeout_and_errors_graceful(monkeypatch):
+    """Verify that timeouts and HTTP 500 errors gracefully return None without unhandled exceptions."""
+    import httpx
+    from app.analyzers.llm_analyzer import LLMRiskAnalyzer
+
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-mock-test-key")
+
+    # Simulate network timeout
+    async def mock_post_timeout(self, url, *args, **kwargs):
+        raise httpx.ReadTimeout("Request timed out")
+
+    monkeypatch.setattr(httpx.AsyncClient, "post", mock_post_timeout)
+
+    analyzer = LLMRiskAnalyzer()
+    result = await analyzer.analyze_clauses(["Some clause."])
+    assert result is None
+
+    # Simulate HTTP 500 server error
+    async def mock_post_500(self, url, *args, **kwargs):
+        return httpx.Response(500, request=httpx.Request("POST", url))
+
+    monkeypatch.setattr(httpx.AsyncClient, "post", mock_post_500)
+    result500 = await analyzer.analyze_clauses(["Some clause."])
+    assert result500 is None

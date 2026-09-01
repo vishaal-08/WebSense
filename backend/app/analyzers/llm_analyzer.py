@@ -12,11 +12,13 @@ logger = logging.getLogger(__name__)
 class LLMRiskAnalyzer:
     """Optional LLM semantic analyzer for deep clause interpretation when API key is available."""
     
-    def __init__(self):
-        self.api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("OPENAI_API_KEY")
+    @property
+    def api_key(self) -> Optional[str]:
+        return os.environ.get("GEMINI_API_KEY") or os.environ.get("OPENAI_API_KEY")
         
     def is_available(self) -> bool:
-        return bool(self.api_key and len(self.api_key.strip()) > 5)
+        key = self.api_key
+        return bool(key and len(key.strip()) > 5)
         
     async def analyze_clauses(
         self, clauses: List[str], document_type: str = "Generic TOS"
@@ -60,6 +62,37 @@ Clauses to analyze:
                         data = resp.json()
                         text_content = data['candidates'][0]['content']['parts'][0]['text']
                         parsed = json.loads(text_content)
+                        if isinstance(parsed, dict):
+                            parsed = parsed.get("clauses", parsed.get("risks", []))
+                        return self._parse_llm_results(parsed, document_type)
+                elif os.environ.get("OPENAI_API_KEY"):
+                    # OpenAI REST API Endpoint
+                    url = "https://api.openai.com/v1/chat/completions"
+                    headers = {
+                        "Authorization": f"Bearer {self.api_key}",
+                        "Content-Type": "application/json"
+                    }
+                    payload = {
+                        "model": "gpt-4o-mini",
+                        "messages": [
+                            {"role": "system", "content": "You are WebSense Legal AI. Return only valid JSON."},
+                            {"role": "user", "content": prompt}
+                        ],
+                        "temperature": 0.1
+                    }
+                    resp = await client.post(url, headers=headers, json=payload)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        raw_text = data['choices'][0]['message']['content'].strip()
+                        # Extract JSON if wrapped in markdown code fences
+                        if "```" in raw_text:
+                            parts = raw_text.split("```")
+                            raw_text = parts[1] if len(parts) > 1 else raw_text
+                            if raw_text.startswith("json"):
+                                raw_text = raw_text[4:].strip()
+                        parsed = json.loads(raw_text.strip())
+                        if isinstance(parsed, dict):
+                            parsed = parsed.get("clauses", parsed.get("risks", []))
                         return self._parse_llm_results(parsed, document_type)
         except Exception as e:
             logger.warning(f"LLM semantic analysis failed: {e}. Falling back to local classifier.")
@@ -67,6 +100,8 @@ Clauses to analyze:
         return None
         
     def _parse_llm_results(self, raw_list: List[dict], document_type: str) -> List[ClauseRisk]:
+        if not isinstance(raw_list, list):
+            return []
         results = []
         for item in raw_list:
             try:

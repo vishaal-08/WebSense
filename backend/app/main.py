@@ -9,10 +9,15 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Environment configuration
+ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")
+raw_origins = os.environ.get("ALLOWED_ORIGINS", "*")
+allowed_origins = [o.strip() for o in raw_origins.split(",") if o.strip()]
+
 # Enable CORS for browser extension and local demo pages
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Permits Chrome extension chrome-extension:// origins & localhost
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -26,6 +31,7 @@ async def root():
     return {
         "name": "WebSense API Engine",
         "status": "online",
+        "environment": ENVIRONMENT,
         "docs": "/docs",
         "health": "/health"
     }
@@ -33,4 +39,6 @@ async def root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    host = os.environ.get("HOST", "0.0.0.0")
+    port = int(os.environ.get("PORT", "8000"))
+    uvicorn.run("app.main:app", host=host, port=port, reload=(ENVIRONMENT == "development"))

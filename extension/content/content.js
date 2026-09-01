@@ -21,6 +21,16 @@
         runFullScan();
       }
     });
+
+    // Listen for manual re-scan requests from extension popup
+    chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+      if (msg && msg.type === "MANUAL_RESCAN") {
+        hasAnalyzed = false;
+        runFullScan();
+        sendResponse({ success: true });
+        return true;
+      }
+    });
   }
 
   function runFullScan() {

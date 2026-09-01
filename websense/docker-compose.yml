@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    restart: unless-stopped
+
+  demo-site:
+    image: python:3.13-slim
+    working_dir: /site
+    volumes:
+      - ./demo-site:/site
+    command: python -m http.server 8080
+    ports:
+      - "8080:8080"
+    restart: unless-stopped

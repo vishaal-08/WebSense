@@ -1,0 +1,291 @@
+/* WebSense Shadow DOM Isolated Styles */
+:host {
+  all: initial !important;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  color: #f8fafc !important;
+}
+
+* {
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Floating Status Indicator Widget */
+.websense-floating-widget {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 2147483647 !important;
+  background: #0f172a !important;
+  border: 1px solid #334155 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+  border-radius: 30px !important;
+  padding: 10px 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  user-select: none !important;
+}
+
+.websense-floating-widget:hover {
+  transform: translateY(-2px) !important;
+  border-color: #38bdf8 !important;
+}
+
+.websense-status-dot {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background: #38bdf8 !important;
+  box-shadow: 0 0 10px #38bdf8 !important;
+}
+
+.websense-status-dot.dot-scanning {
+  background: #38bdf8 !important;
+  animation: pulse-glow 1.5s infinite !important;
+}
+
+.websense-status-dot.dot-low {
+  background: #10b981 !important;
+  box-shadow: 0 0 10px #10b981 !important;
+}
+
+.websense-status-dot.dot-moderate {
+  background: #f59e0b !important;
+  box-shadow: 0 0 10px #f59e0b !important;
+}
+
+.websense-status-dot.dot-high, .websense-status-dot.dot-critical {
+  background: #ef4444 !important;
+  box-shadow: 0 0 12px #ef4444 !important;
+}
+
+@keyframes pulse-glow {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+.websense-widget-title {
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  color: #fff !important;
+}
+
+.websense-widget-score {
+  font-weight: 800 !important;
+  font-size: 12px !important;
+  padding: 3px 8px !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Hover Tooltip Popover */
+.websense-tooltip-popover {
+  position: absolute !important;
+  z-index: 2147483647 !important;
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6) !important;
+  border-radius: 14px !important;
+  padding: 16px !important;
+  width: 340px !important;
+  pointer-events: auto !important;
+  display: none;
+}
+
+.websense-tooltip-popover.visible {
+  display: block !important;
+}
+
+.websense-popover-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 10px !important;
+  padding-bottom: 8px !important;
+  border-bottom: 1px solid #334155 !important;
+}
+
+.websense-badge {
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  text-transform: uppercase !important;
+}
+
+.websense-badge.critical { background: rgba(239, 68, 68, 0.2) !important; color: #ef4444 !important; }
+.websense-badge.high { background: rgba(249, 115, 22, 0.2) !important; color: #f97316 !important; }
+.websense-badge.medium { background: rgba(245, 158, 11, 0.2) !important; color: #f59e0b !important; }
+.websense-badge.low { background: rgba(16, 185, 129, 0.2) !important; color: #10b981 !important; }
+
+.websense-popover-body {
+  margin-bottom: 12px !important;
+}
+
+.websense-popover-exp {
+  font-weight: 600 !important;
+  color: #f8fafc !important;
+  margin-bottom: 6px !important;
+  font-size: 13px !important;
+}
+
+.websense-popover-why {
+  color: #94a3b8 !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+}
+
+.websense-popover-meta {
+  display: flex !important;
+  justify-content: space-between !important;
+  font-size: 11px !important;
+  color: #64748b !important;
+  margin-top: 8px !important;
+}
+
+/* Consent Interception Modal Backdrop & Container */
+.websense-modal-backdrop {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 2147483646 !important;
+  background: rgba(15, 23, 42, 0.8) !important;
+  backdrop-filter: blur(8px) !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.websense-modal-backdrop.visible {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.websense-modal-card {
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7) !important;
+  border-radius: 20px !important;
+  width: 480px !important;
+  max-width: 90vw !important;
+  padding: 32px !important;
+  color: #f8fafc !important;
+}
+
+.websense-modal-header {
+  text-align: center !important;
+  margin-bottom: 24px !important;
+}
+
+.websense-warning-icon {
+  font-size: 3rem !important;
+  margin-bottom: 12px !important;
+}
+
+.websense-modal-title {
+  font-size: 1.5rem !important;
+  font-weight: 800 !important;
+  margin-bottom: 6px !important;
+}
+
+.websense-score-banner {
+  display: inline-block !important;
+  padding: 6px 16px !important;
+  border-radius: 20px !important;
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #ef4444 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  font-weight: 700 !important;
+  margin-top: 8px !important;
+}
+
+.websense-clause-list {
+  background: #0f172a !important;
+  border: 1px solid #334155 !important;
+  border-radius: 12px !important;
+  padding: 14px !important;
+  max-height: 180px !important;
+  overflow-y: auto !important;
+  margin-bottom: 20px !important;
+}
+
+.websense-clause-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+  font-size: 13px !important;
+  padding: 8px 0 !important;
+  border-bottom: 1px solid #1e293b !important;
+}
+
+.websense-clause-item:last-child {
+  border-bottom: none !important;
+}
+
+.websense-ack-group {
+  margin-bottom: 24px !important;
+  background: rgba(51, 65, 85, 0.4) !important;
+  padding: 14px !important;
+  border-radius: 10px !important;
+}
+
+.websense-ack-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  cursor: pointer !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+.websense-btn-row {
+  display: flex !important;
+  gap: 12px !important;
+}
+
+.websense-btn {
+  flex: 1 !important;
+  padding: 12px 18px !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+  border: none !important;
+  text-align: center !important;
+  transition: all 0.2s ease !important;
+}
+
+.websense-btn-back {
+  background: #334155 !important;
+  color: #f8fafc !important;
+}
+
+.websense-btn-continue {
+  background: #ef4444 !important;
+  color: #fff !important;
+}
+
+.websense-btn-continue:disabled {
+  background: #475569 !important;
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+.websense-disclaimer-note {
+  font-size: 11px !important;
+  color: #64748b !important;
+  text-align: center !important;
+  margin-top: 14px !important;
+}

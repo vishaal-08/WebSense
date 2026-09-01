@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSense Demo Environment & Test Bed</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="portal-body">
+  <div class="portal-container">
+    <header class="portal-header">
+      <div class="brand">
+        <span class="shield-icon">🛡️</span>
+        <h1>WebSense <span>Demo Hub</span></h1>
+      </div>
+      <p class="tagline">Real-time protection before you click Accept.</p>
+    </header>
+
+    <main class="portal-main">
+      <section class="demo-cards">
+        <div class="card high-risk-card">
+          <div class="card-badge critical">HIGH RISK DEMO</div>
+          <h2>CloudFlow AI Platform</h2>
+          <p class="desc">A realistic SaaS signup flow containing severe legal clauses: IP assignment, data sale, mandatory arbitration, and non-refundable auto-billing.</p>
+          <div class="risk-tags">
+            <span>🔴 IP Assignment</span>
+            <span>🔴 Data Sale</span>
+            <span>🟠 Arbitration</span>
+            <span>🟠 Auto-Renewal</span>
+          </div>
+          <a href="risky.html" class="btn btn-primary">Launch CloudFlow Demo →</a>
+        </div>
+
+        <div class="card low-risk-card">
+          <div class="card-badge safe">SAFE / LOW RISK DEMO</div>
+          <h2>Simple Notes App</h2>
+          <p class="desc">A privacy-focused notes application using fair, minimal user terms. Demonstrates that WebSense does not raise false alarms.</p>
+          <div class="risk-tags green">
+            <span>🟢 User Retains IP</span>
+            <span>🟢 No Data Sale</span>
+            <span>🟢 Fair Terms</span>
+          </div>
+          <a href="safe.html" class="btn btn-secondary">Launch Safe Notes Demo →</a>
+        </div>
+      </section>
+
+      <section class="info-section">
+        <h3>How to Test WebSense</h3>
+        <ol class="steps-list">
+          <li>Ensure the <strong>WebSense Chrome Extension</strong> is loaded in Chrome (<code>chrome://extensions</code>).</li>
+          <li>Ensure the <strong>FastAPI Backend Engine</strong> is running at <code>http://localhost:8000</code>.</li>
+          <li>Open either demo page above to watch WebSense automatically scan, highlight risks, and protect consent submit actions.</li>
+        </ol>
+      </section>
+    </main>
+
+    <footer class="portal-footer">
+      <p>WebSense Autonomous Browser Security &copy; 2026 • Automated Risk Signals, Not Legal Advice.</p>
+    </footer>
+  </div>
+</body>
+</html>

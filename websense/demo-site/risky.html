@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudFlow AI — Create Your Account</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="app-body">
+  <div class="signup-wrapper">
+    <div class="signup-card">
+      <div class="brand-header">
+        <div class="logo">⚡ CloudFlow AI</div>
+        <p class="subtitle">Empowering teams with next-gen autonomous AI workflows</p>
+      </div>
+
+      <form id="signupForm" class="signup-form" onsubmit="event.preventDefault(); return false;">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" placeholder="Jane Doe" required value="Jane Doe">
+        </div>
+
+        <div class="form-group">
+          <label for="workEmail">Work Email</label>
+          <input type="email" id="workEmail" placeholder="jane@company.com" required value="jane@company.com">
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" value="••••••••••••" required>
+        </div>
+
+        <!-- Agreement Terms Section -->
+        <div class="agreement-box" data-websense-container="terms">
+          <div class="agreement-header">
+            <h3>CloudFlow Terms of Service & Privacy Policy</h3>
+            <span class="version-tag">Updated September 2026</span>
+          </div>
+
+          <div class="terms-content" id="termsText">
+            <p><strong>1. Introduction and Services.</strong> Welcome to CloudFlow AI. By creating an account, accessing our cloud services, or using our automated productivity suite, you acknowledge that you have read and agree to be bound by these Terms of Service.</p>
+
+            <p><strong>2. Intellectual Property & Invention Assignment.</strong> User hereby unconditionally assigns all right, title, interest, and intellectual property in and to all code, designs, content, inventions, and derivative works created using or uploaded to CloudFlow to CloudFlow Inc. in perpetuity.</p>
+
+            <p><strong>3. Data Monetization and Sharing.</strong> CloudFlow reserves the unrestricted right to share, rent, and sell user profile data, uploaded files, and background activity telemetry to external advertising partners and data brokers for commercial monetization.</p>
+
+            <p><strong>4. AI Model Training.</strong> By uploading data or prompt inputs, user agrees that CloudFlow may use your proprietary content, files, and personal data to train our artificial intelligence and machine learning models without compensation.</p>
+
+            <p><strong>5. Dispute Resolution & Mandatory Arbitration.</strong> Any dispute, claim, or controversy arising out of or relating to this Agreement shall be settled exclusively by binding mandatory arbitration under AAA rules, and user hereby waives all rights to a jury trial or to participate in any class action lawsuit.</p>
+
+            <p><strong>6. Billing & Automatic Renewal.</strong> Subscriptions automatically renew every month at standard rates without further notice. All fees paid are strictly non-refundable under any circumstance.</p>
+
+            <p><strong>7. Limitation of Liability.</strong> CloudFlow disclaims all warranties and maximum aggregate liability shall not exceed $10, regardless of the cause of action.</p>
+          </div>
+        </div>
+
+        <div class="checkbox-group">
+          <label class="custom-checkbox">
+            <input type="checkbox" id="agreeCheckbox" required>
+            <span class="checkmark"></span>
+            <span class="label-text">I agree to the CloudFlow Terms of Service and Privacy Policy</span>
+          </label>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn btn-block btn-accent">
+          Accept Terms & Create Account
+        </button>
+      </form>
+
+      <div id="statusMessage" class="status-msg hidden">
+        🎉 Account created successfully! (Form submit completed)
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

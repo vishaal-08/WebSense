@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "WebSense — Autonomous Legal Risk Interceptor",
+  "version": "1.0.0",
+  "description": "Real-time protection before you click Accept. Detects legal risks in Terms of Service, Privacy Policies, and NDAs.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "WebSense Risk Protection"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "content/detector.js",
+        "content/extractor.js",
+        "content/highlighter.js",
+        "content/interceptor.js",
+        "content/ui/overlay.js",
+        "content/content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["content/ui/styles.css"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

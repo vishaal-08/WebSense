@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Notes — Sign Up</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="app-body safe-theme">
+  <div class="signup-wrapper">
+    <div class="signup-card">
+      <div class="brand-header">
+        <div class="logo">📝 Simple Notes</div>
+        <p class="subtitle">Private, lightweight note taking for privacy-conscious users</p>
+      </div>
+
+      <form id="signupForm" class="signup-form" onsubmit="event.preventDefault(); return false;">
+        <div class="form-group">
+          <label for="workEmail">Email Address</label>
+          <input type="email" id="workEmail" placeholder="user@example.com" required value="user@example.com">
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" value="••••••••••••" required>
+        </div>
+
+        <!-- Agreement Terms Section -->
+        <div class="agreement-box" data-websense-container="terms">
+          <div class="agreement-header">
+            <h3>Simple Notes Terms & Privacy Baseline</h3>
+            <span class="version-tag safe-tag">Standard Fair Terms</span>
+          </div>
+
+          <div class="terms-content" id="termsText">
+            <p><strong>1. Content Ownership.</strong> You retain full right, title, and intellectual property ownership in and to all notes, text, and attachments created within Simple Notes.</p>
+
+            <p><strong>2. Data Usage & Privacy.</strong> We process your data solely to sync notes across your designated devices. We covenant never to sell, trade, or share your notes or personal information with third parties.</p>
+
+            <p><strong>3. Security & Access.</strong> Your notes are encrypted in transit and at rest. You may export or delete your account data at any time without fee or restriction.</p>
+
+            <p><strong>4. Cancellation.</strong> Subscriptions may be cancelled anytime with a single click in your profile settings without penalty or advance notice requirements.</p>
+          </div>
+        </div>
+
+        <div class="checkbox-group">
+          <label class="custom-checkbox">
+            <input type="checkbox" id="agreeCheckbox" required>
+            <span class="checkmark"></span>
+            <span class="label-text">I agree to Simple Notes Terms and Privacy Policy</span>
+          </label>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn btn-block btn-secondary">
+          Accept & Create Account
+        </button>
+      </form>
+
+      <div id="statusMessage" class="status-msg hidden">
+        🎉 Account created successfully!
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSense Risk Dashboard</title>
+  <link rel="stylesheet" href="popup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="popup-container">
+    <header class="header">
+      <div class="brand">
+        <span class="logo-shield">🛡️</span>
+        <div class="brand-text">
+          <h1>WebSense</h1>
+          <span class="version">v1.0 • Autonomous Protection</span>
+        </div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="protectionToggle" checked>
+        <span class="slider"></span>
+      </label>
+    </header>
+
+    <main class="main">
+      <div class="current-site-bar">
+        <span class="site-icon">🌐</span>
+        <span id="siteUrl" class="site-url">example.com</span>
+      </div>
+
+      <!-- Risk Score Gauge Card -->
+      <div class="score-card" id="scoreCard">
+        <div class="gauge-wrapper">
+          <div class="score-number" id="scoreNumber">--</div>
+          <div class="score-max">/100</div>
+        </div>
+        <div class="score-info">
+          <div class="risk-badge" id="riskBadge">SCANNING</div>
+          <div class="doc-type" id="docType">Generic TOS</div>
+        </div>
+      </div>
+
+      <div class="summary-box" id="summaryBox">
+        Analyzing agreement context on current tab...
+      </div>
+
+      <section class="risks-section">
+        <h3>Detected Legal Risks <span id="riskCount" class="risk-count">0</span></h3>
+        <div class="risk-list" id="riskList">
+          <div class="empty-state">No active legal risks detected on this page.</div>
+        </div>
+      </section>
+
+      <button id="rescanBtn" class="btn btn-rescan">
+        🔄 Scan This Page
+      </button>
+    </main>
+
+    <footer class="footer">
+      <span>Automated risk signals • Not legal advice</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

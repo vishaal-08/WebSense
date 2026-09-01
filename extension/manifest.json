@@ -5,8 +5,7 @@
   "description": "Real-time protection before you click Accept. Detects legal risks in Terms of Service, Privacy Policies, and NDAs.",
   "permissions": [
     "storage",
-    "activeTab",
-    "scripting"
+    "activeTab"
   ],
   "host_permissions": [
     "<all_urls>"

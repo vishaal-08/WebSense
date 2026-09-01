@@ -1,5 +1,12 @@
 # WebSense — Autonomous Legal Risk Interceptor
 
+[![WebSense CI](https://github.com/vishaal-08/WebSense/actions/workflows/ci.yml/badge.svg)](https://github.com/vishaal-08/WebSense/actions)
+![Manifest V3](https://img.shields.io/badge/Chrome%20Extension-Manifest%20V3-blue?logo=googlechrome)
+![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi)
+![Vector Store](https://img.shields.io/badge/Vector%20Store-ChromaDB%20%2B%20Embeddings-orange)
+![Tests](https://img.shields.io/badge/Pytest-11%20Passed-brightgreen)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+
 > *"Real-time protection before you click Accept."*
 
 WebSense is an autonomous Chrome Extension and backend semantic analysis engine that protects users from hidden legal risks in Terms of Service, privacy policies, NDAs, SaaS agreements, and consent forms **directly inside the browser at the exact moment of consent**.
